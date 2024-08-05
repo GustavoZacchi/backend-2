@@ -16,6 +16,20 @@ class CreateProductService {
     banner,
     category_id,
   }: ProductRequest) {
+    if (name === "") {
+      throw new Error("Nome Inválido");
+    }
+
+    const productExists = await prismaClient.product.findFirst({
+      where: {
+        name: name,
+      },
+    });
+
+    if (productExists) {
+      throw new Error("Produto já existe");
+    }
+
     const product = await prismaClient.product.create({
       data: {
         name: name,

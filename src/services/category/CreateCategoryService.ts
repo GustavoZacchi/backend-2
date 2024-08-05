@@ -10,6 +10,17 @@ class CreateCategoryService {
       throw new Error("Nome Inválido");
     }
 
+    // Verificar se a categoria já existe
+    const categoryExists = await prismaClient.category.findFirst({
+      where: {
+        name: name,
+      },
+    });
+
+    if (categoryExists) {
+      throw new Error("Categoria já existe");
+    }
+
     const category = await prismaClient.category.create({
       data: {
         name: name,
@@ -23,4 +34,5 @@ class CreateCategoryService {
     return category;
   }
 }
+
 export { CreateCategoryService };
